@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import nnfs
 from nnfs.datasets import spiral_data
 nnfs.init()
@@ -17,6 +18,12 @@ dense1 = Layer_Dense(2,3)
 dense1.forward(X)
 
 print(dense1.output[:5])
+
+plt.scatter(X[:,0], X[:,1], c=y, cmap='brg')
+plt.show()
+
+# A = [[1,2,3],[4,155,6],[7,8,9]]
+# print(  np.max(A,axis=1))
  
 # biases = [2,3,0.5]
 # weights = [[0.2,0.8,-.5,1], [0.5,-0.91,0.26,-0.5], [-0.26,-0.27,0.17,0.87]]
