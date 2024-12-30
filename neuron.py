@@ -24,6 +24,14 @@ class Activation_Softmax:     #SoftMax activation used for probability final act
         probabilities = exp_values / np.sum(exp_values, axis=1, keepdims = True)   #axis = 1 to maintain #neurons x 1 dimensions 
         self.output = probabilities
 
+class Activation_Sigmoid:
+    def forward(self,inputs):
+        self.output = 1/(1+np.exp(-inputs))
+
+class Activation_Tanh:
+    def forward(self,inputs):
+        self.output = (2/(1+np.exp(-2 * inputs)) - 1)
+
 X,y = spiral_data(samples=100, classes=3)
 
 dense1 = Layer_Dense(2,3)
