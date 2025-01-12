@@ -37,19 +37,24 @@ class Loss:
         sample_losses = self.forward(output,y_values)
         data_loss = np.mean(sample_losses)
         return data_loss
+class Loss:  #overarching class of Loss functions.
+    def calculate(self, output,y ):    #calculates and returns the mean loss between all samples for complete coverage and overall weight improvements
+        sample_losses = self.forward(output,y)    #run the subset class forward method 
+        data_loss = np.mean(sample_losses)     
+        return data_loss         #return the final Loss function result 
 
 class Loss_CategoricalCrossEntropy(Loss):
     def forward(self, y_pred, y_true):
-        samples = len(y_pred)
-
-        y_pred_clipped = np.clip(y_pred, 1e-7, 1-1e-7)
+        samples = len(y_pred)      # number of batches in the data 
+ 
+        y_pred_clipped = np.clip(y_pred, 1e-7, 1-1e-7)  # Avoid values close to 0 and 1, to avoid too high or too low loss results
         
-        if len(y_true.shape) == 1:
-            correct_confidences = y_pred_clipped[range(samples), y_true]
-        elif len(y_true.shape) == 2:
-            correct_confidences = np.sum(y_pred_clipped*y_true,axis=1)
+        if len(y_true.shape) == 1:     # Case 1 : expected outputs is returned as a list 1 x # of batches 
+            correct_confidences = y_pred_clipped[range(samples), y_true]     # advanced indexing matching each row of y_pred with corresponding correct value returning a list 
+        elif len(y_true.shape) == 2:   # Case 2: expected outputs returned as one hot encoded, and therefore returned as a matrix of = size to y_pred
+            correct_confidences = np.sum(y_pred_clipped*y_true,axis=1)   # isolate the correct value from y_true to y_pred, and then sum the rows returning a list
 
-        negative_log_likelihoods = -np.log(correct_confidences)
+        negative_log_likelihoods = -np.log(correct_confidences)    #apply -ln() to all elememts of the list for return 
         return negative_log_likelihoods
 
 
@@ -81,6 +86,7 @@ loss = loss_function.calculate(activation2.output, y)
 print("loss: ", loss)
 
 predictions = np.argmax(activation2.output, axis=1)
+print(predictions[:5])
 if len(y.shape) ==2:
     y = np.argmax(y,axis=1)
 accuracy = np.mean(predictions == y)
