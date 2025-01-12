@@ -33,8 +33,8 @@ class Activation_Tanh:
         self.output = (2/(1+np.exp(-2 * inputs)) - 1)
 
 class Loss:
-    def calculate(self, output,y ):
-        sample_losses = self.forward(output,y)
+    def calculate(self, output, y_values):
+        sample_losses = self.forward(output,y_values)
         data_loss = np.mean(sample_losses)
         return data_loss
 
@@ -63,10 +63,14 @@ dense2 = Layer_Dense(3,3)
 
 activation2 = Activation_Softmax()
 
+dense3 = Layer_Dense(3,3)
+
 loss_function = Loss_CategoricalCrossEntropy()
 #singular forward pass against 2 layers with one ReLU and a concluding softmax 
 dense1.forward(X)
 activation1.forward(dense1.output)
+dense3.forward(activation1.output)
+activation1.forward(dense3.output)
 dense2.forward(activation1.output)
 activation2.forward(dense2.output)
 
